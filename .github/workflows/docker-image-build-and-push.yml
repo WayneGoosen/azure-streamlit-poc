@@ -12,7 +12,7 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository }} # The owner and repository name. For example, octocat/Hello-World.
+      IMAGE_NAME: waynegoosen/azure-streamlit-poc # The owner and repository name. For example, octocat/hello-world.
 
     permissions:
       contents: write
