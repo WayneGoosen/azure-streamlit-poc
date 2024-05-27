@@ -1,6 +1,6 @@
-# Streamlit Docker
+# Deploy Streamlit using Docker 🐳
 
-This is a Dockerfile & relevant app files for running a Streamlit application. The main application file is `app.py`.
+This is a Dockerfile & relevant app files for running a Streamlit application within a container. The main application file is `app.py`.
 
 ## Dockerfile Details
 
