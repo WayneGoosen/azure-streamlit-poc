@@ -1,0 +1,66 @@
+name: Docker Image Build and Push
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'app/**'
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }} # The owner and repository name. For example, octocat/Hello-World.
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Install GitVersion for versioning
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: '5.x'
+
+      # Execute GitVersion to get the version number
+      - name: Use GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+
+      # Set up Git user for tagging
+      - uses: fregante/setup-git-user@v1
+
+      # Create a new tag based on the version number
+      - name: Create Tag
+        run: git tag -a ${{ steps.gitversion.outputs.semVer }} -m "Auto-generated tag from GitHub Action."
+      
+      # Push the newly created tags to the repository
+      - name: Push Tags
+        run: git push origin --tags
+
+      # Log in to the Container registry
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2.2.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build and push the Docker image to the registry
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4.1.1
+        with:
+          context: ./app
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}
