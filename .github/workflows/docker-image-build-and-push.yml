@@ -42,7 +42,7 @@ jobs:
         uses: gittools/actions/gitversion/execute@v1.1.1
 
       # Set up Git user for tagging
-      - uses: fregante/setup-git-user@v1
+      - uses: fregante/setup-git-user@v2
 
       # Create a new tag based on the version number
       - name: Create Tag
