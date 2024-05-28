@@ -7,6 +7,10 @@ on:
       - 'app/**'
   workflow_dispatch:
 
+# If this workflow is triggered again while a previous run is still in progress, GitHub will queue the new run until the previous one completes.
+concurrency: 
+  group: build-and-push-image
+
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
