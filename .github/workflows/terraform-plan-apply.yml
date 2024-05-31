@@ -1,0 +1,75 @@
+name: Terraform Plan & Apply Infrastructure
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'infra/**'
+  workflow_dispatch:
+
+env:
+  TF_VAR_docker_image_name: 'waynegoosen/azure-streamlit-poc:0.1.1'
+  TF_VAR_resource_group_name: 'rg-streamlit-poc'
+  WORKING_DIRECTORY: './infra'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+          
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.4
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_USE_OIDC: true         
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_USE_OIDC: true
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: terraform plan -no-color
+        continue-on-error: false
+
+      - name: Terraform Apply (auto-approve)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_USE_OIDC: true
+        run: terraform apply -auto-approve
