@@ -2,7 +2,7 @@
 
 ![PoC](https://img.shields.io/badge/Release_Stage-PoC-yellow?color=%23FF4500)
 
-<img src="./images/website.png" alt="adr"/>
+<img src="./images/website.png" alt="streamlit"/>
 
 ## Overview
 
