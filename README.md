@@ -56,7 +56,32 @@ Streamlit is an open-source Python library that makes it easy to create interact
 
 ## Getting Started 🧑‍💻
 
-**Coming soon**
+**Coming Soon**
+
+## Development
+
+> To begin, make sure you have the [Dev containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) installed and have [Docker](https://www.docker.com/products/docker-desktop/) running. Check out [Devcontainers](https://containers.dev/) for context.
+
+1. **Clone** this repo and open it in **Visual Studio Code**.
+2. You should this this notification pop up:
+
+    <img src="./images/devcontainerprompt.png" alt="devcontainerprompt"/>
+
+    Select _Reopen in Container_ and the devcontainer will be loaded.
+
+This will prepare your dev environment with the required tooling.
+
+### Using a special button
+
+This will open this repo in Visual Studio Code using a _link_. Press below:
+
+[
+    ![Open in Remote - Containers](
+        https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode    )
+](
+    https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/WayneGoosen/azure-streamlit-poc
+)
+
 
 ## License 📝
 

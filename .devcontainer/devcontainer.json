@@ -5,8 +5,27 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
-		"ghcr.io/devcontainers/features/azure-cli:1": {},
-		"ghcr.io/devcontainers-contrib/features/terraform-asdf:2": {}
+		"ghcr.io/devcontainers/features/azure-cli:1": {
+			"version": "2.61.0"
+		},
+		"ghcr.io/devcontainers-contrib/features/terraform-asdf:2": {
+			"version": "1.8.0"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.9"
+		},
+		"ghcr.io/dhoeric/features/terraform-docs:1": {
+			"version": "0.18.0"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-azureterraform",
+				"hashicorp.terraform",
+				"ms-azuretools.vscode-docker"
+			]
+		}
 	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
