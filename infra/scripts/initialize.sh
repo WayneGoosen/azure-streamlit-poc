@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This script creates the necessary resources in Azure for Terraform to run. Execute az login before running this script.
+# Requires azure cli to be installed. Install it from https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 
 # names must match the names in providers.tf
 RG_NAME="rg-streamlit-poc"

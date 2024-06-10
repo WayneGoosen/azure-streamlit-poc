@@ -2,15 +2,17 @@
 
 ![PoC](https://img.shields.io/badge/Release_Stage-PoC-yellow?color=%23FF4500)
 
-<img src="./images/website.png" alt="streamlit"/>
+![streamlit](./images/website.png)
 
 ## Overview
 
 I needed to create a quick proof of concept (PoC) using Streamlit but had two constraints:
+
 - Self-host instead of using [Streamlit community cloud](https://streamlit.io/cloud)
 - Control access to the deployed website
 
 With this in mind, containerizing and hosting on Azure was the solution. This repository provides a boilerplate to fast track this with the following implementations:
+
 - Containerized Streamlit app with a blank `app.py` file (just add your code).
 - GitHub workflow to build and publish the image to `ghcr.io`.
 - Terraform code to manage infrastructure on Azure.
@@ -56,7 +58,24 @@ Streamlit is an open-source Python library that makes it easy to create interact
 
 ## Getting Started 🧑‍💻
 
-**Coming Soon**
+> This project requires an Azure subscription to run, [Get started](https://azure.microsoft.com/en-us/)
+
+1. Create a repository from this template repo.
+2. Open a shell and run `azure login`
+3. Update subject field within your respository naming in infra/scripts/credential.json
+4. Execute infra/scripts/initialize.sh and capture output fields
+5. Setting up environments:
+
+	- Navigate to the your repository on GitHub.
+	- Go to “Settings” > “Environments”.
+	- Create a new environment 'production'
+
+6. Adding Secrets:
+
+	- Navigate to the your repository on GitHub.
+	- Go to “Settings” > “Environments” > Select “production”.
+	- Go to "Environment secrets" and select "Add environment secret"
+	- Add the following secrets using the output of step 4: AZURE_ENTRA_ID_CLIENT_ID, AZURE_ENTRA_ID_TENANT_ID & AZURE_SUBSCRIPTION_ID
 
 ## Development
 
@@ -65,7 +84,7 @@ Streamlit is an open-source Python library that makes it easy to create interact
 1. **Clone** this repo and open it in **Visual Studio Code**.
 2. You should this this notification pop up:
 
-    <img src="./images/devcontainerprompt.png" alt="devcontainerprompt"/>
+![devcontainerprompt](./images/devcontainerprompt.png)
 
     Select _Reopen in Container_ and the devcontainer will be loaded.
 
@@ -81,7 +100,6 @@ This will open this repo in Visual Studio Code using a _link_. Press below:
 ](
     https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/WayneGoosen/azure-streamlit-poc
 )
-
 
 ## License 📝
 
