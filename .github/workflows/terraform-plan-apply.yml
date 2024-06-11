@@ -34,7 +34,7 @@ jobs:
           else
             TAG=$(git describe --tags --abbrev=0)
           fi
-          echo "::set-output name=tag::$TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
           
       - name: Azure login
         uses: azure/login@v2
