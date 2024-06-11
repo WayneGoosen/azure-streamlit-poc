@@ -5,10 +5,12 @@ on:
     branches: [ "main" ]
     paths:
       - 'infra/**'
+    tags:
+      - '*'
   workflow_dispatch:
 
 env:
-  TF_VAR_docker_image_name: 'waynegoosen/azure-streamlit-poc:0.1.2'
+  IMAGE_NAME: 'waynegoosen/azure-streamlit-poc'
   TF_VAR_resource_group_name: 'rg-streamlit-poc'
   WORKING_DIRECTORY: './infra'
 
@@ -21,6 +23,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      
+      - name: Extract image tag
+        id: extract-tag
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            TAG=${GITHUB_REF#refs/tags/}
+          else
+            TAG=$(git describe --tags --abbrev=0)
+          fi
+          echo "::set-output name=tag::$TAG"
           
       - name: Azure login
         uses: azure/login@v2
@@ -61,6 +73,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_USE_OIDC: true
+          TF_VAR_docker_image_name: '${{ env.IMAGE_NAME }}:${{ steps.extract-tag.outputs.tag }}'
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: terraform plan -no-color
         continue-on-error: false
@@ -72,4 +85,5 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_USE_OIDC: true
+          TF_VAR_docker_image_name: '${{ env.IMAGE_NAME }}:${{ steps.extract-tag.outputs.tag }}'
         run: terraform apply -auto-approve
