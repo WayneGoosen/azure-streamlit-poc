@@ -16,7 +16,8 @@
 		},
 		"ghcr.io/dhoeric/features/terraform-docs:1": {
 			"version": "0.18.0"
-		}
+		},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": { }
 	},
 	"customizations": {
 		"vscode": {
