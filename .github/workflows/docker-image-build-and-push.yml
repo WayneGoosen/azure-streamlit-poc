@@ -17,7 +17,6 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: waynegoosen/azure-streamlit-poc # The owner and repository name. For example, octocat/hello-world.
 
     permissions:
       contents: write
@@ -29,6 +28,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      
+      # image name needs to be lowercase, some accounts have uppercase letters
+      - name: Get owner/repo name and convert to lowercase
+        id: get-image-name
+        run: echo "image-name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       # Install GitVersion for versioning
       - name: Install GitVersion
@@ -67,5 +71,5 @@ jobs:
           context: ./app
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}
+            ${{ env.REGISTRY }}/${{ steps.get-image-name.outputs.image-name }}:latest
+            ${{ env.REGISTRY }}/${{ steps.get-image-name.outputs.image-name }}:${{ steps.gitversion.outputs.semVer }}
