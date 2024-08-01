@@ -36,14 +36,14 @@ jobs:
 
       # Install GitVersion for versioning
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v1.1.1
+        uses: gittools/actions/gitversion/setup@v3.0.0
         with:
           versionSpec: '5.x'
 
       # Execute GitVersion to get the version number
       - name: Use GitVersion
         id: gitversion
-        uses: gittools/actions/gitversion/execute@v1.1.1
+        uses: gittools/actions/gitversion/execute@v3.0.0
 
       # Set up Git user for tagging
       - uses: fregante/setup-git-user@v2
