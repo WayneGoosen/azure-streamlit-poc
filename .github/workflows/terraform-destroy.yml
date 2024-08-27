@@ -22,8 +22,8 @@ jobs:
       - name: Azure login
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
+          client-id: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Setup Terraform
@@ -35,9 +35,9 @@ jobs:
         id: init
         working-directory: ${{ env.WORKING_DIRECTORY }}
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
           ARM_USE_OIDC: true
         run: terraform init
 
@@ -45,8 +45,8 @@ jobs:
         id: destroy
         working-directory: ${{ env.WORKING_DIRECTORY }}
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_ENTRA_ID_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_ENTRA_ID_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
           ARM_USE_OIDC: true
         run: terraform destroy -auto-approve
