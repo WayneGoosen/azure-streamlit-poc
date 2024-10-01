@@ -66,7 +66,7 @@ jobs:
 
       # Build and push the Docker image to the registry
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6.7.0
+        uses: docker/build-push-action@v6.9.0
         with:
           context: ./app
           push: true
