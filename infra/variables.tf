@@ -57,16 +57,12 @@ variable "always_on_enabled" {
 }
 
 variable "app_service_plan_sku_name" {
-  description = "SKU name for the App Service Plan. Note: Free, F1, and D1 SKUs do not support always_on feature."
+  description = "SKU name for the App Service Plan. IMPORTANT: Free, F1, and D1 SKUs do not support always_on feature. If using these SKUs, set always_on_enabled to false."
   type        = string
   default     = "B1"
   validation {
     condition     = contains(["B1", "B2", "B3", "D1", "F1", "P1v2", "P2v2", "P3v2", "P0v3", "P1v3", "P2v3", "P3v3", "P1mv3", "P2mv3", "P3mv3", "P4mv3", "P5mv3"], var.app_service_plan_sku_name)
     error_message = "The app_service_plan_sku_name must be one of the following: B1, B2, B3, D1, F1, P1v2, P2v2, P3v2, P0v3, P1v3, P2v3, P3v3, P1mv3, P2mv3, P3mv3, P4mv3, P5mv3."
-  }
-  validation {
-    condition     = !var.always_on_enabled || !contains(["F1", "D1", "Free"], var.app_service_plan_sku_name)
-    error_message = "always_on cannot be set to true when using Free, F1, or D1 SKU. Either disable always_on or use a different SKU."
   }
 }
 
