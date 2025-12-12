@@ -8,7 +8,7 @@ resource "azurerm_service_plan" "service_plan" {
   tags = local.common_tags
   
   lifecycle {
-    prevent_destroy = var.environment == "prod" ? true : false
+    prevent_destroy = local.prevent_destroy
   }
 }
 
@@ -48,6 +48,6 @@ resource "azurerm_linux_web_app" "web-app" {
   tags = local.common_tags
 
   lifecycle {
-    prevent_destroy = var.environment == "prod" ? true : false
+    prevent_destroy = local.prevent_destroy
   }
 }
