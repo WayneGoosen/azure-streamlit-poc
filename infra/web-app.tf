@@ -7,9 +7,6 @@ resource "azurerm_service_plan" "service_plan" {
   
   tags = local.common_tags
   
-  lifecycle {
-    prevent_destroy = local.prevent_destroy
-  }
 }
 
 resource "random_id" "random_chars_web_app_name" {
@@ -47,7 +44,4 @@ resource "azurerm_linux_web_app" "web-app" {
 
   tags = local.common_tags
 
-  lifecycle {
-    prevent_destroy = local.prevent_destroy
-  }
 }

@@ -14,7 +14,4 @@ locals {
   
   # Log level based on environment
   log_level = var.environment == "prod" ? "Warning" : "Verbose"
-  
-  # Prevent destroy for production environment
-  prevent_destroy = var.environment == "prod"
 }
