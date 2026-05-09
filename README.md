@@ -15,7 +15,7 @@ With this in mind, containerizing and hosting on Azure was the solution. This re
 
 - Containerized Streamlit app with a blank `app.py` file (just add your code).
 - GitHub workflow to build and publish the image to `ghcr.io`.
-- Terraform code to manage infrastructure on Azure.
+- Terraform code to manage infrastructure on Azure (Azure Container Apps).
 - GitHub workflow to execute Terraform apply & destroy infrastructure.
 
 I hope this helps you to ship more 🚀
@@ -30,12 +30,13 @@ Streamlit is an open-source Python library that makes it easy to create interact
 
 | Description | Cost (Per month) |
 | ---- | ----------- |
-| **B1** ($0.075/hour) tier for [Azure App Service costing](https://azure.microsoft.com/en-us/pricing/details/app-service/windows/#pricing) | $54.79 |
-| Standard tier with LRS for [Azure Storage Account costing](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/) (10K+ operations cost excluded as minimal usage) | $0.0184 |
+| [Azure Container Apps Consumption](https://azure.microsoft.com/en-us/pricing/details/container-apps/) — scale-to-zero, free tier covers 180,000 vCPU-seconds, 360,000 GiB-seconds, and 2M requests | ~$0 (PoC, idle) |
+| [Log Analytics workspace](https://azure.microsoft.com/en-us/pricing/details/monitor/) — first 5 GB ingestion free, low-volume PoC stays under | ~$0 |
+| Standard tier with LRS for [Azure Storage Account costing](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/) (Terraform state, minimal operations) | $0.0184 |
 | GitHub Workflows (if private repo, check [pricing](https://github.com/pricing)) | $0 |
-|  **Total**   | $54.81 |
+|  **Total**   | ~$0.02 |
 
-**Disclaimer**: Estimation only. Pricing might change; please refer to the official documentation at the time of evaluation.
+**Disclaimer**: Estimation only. Pricing might change; please refer to the official documentation at the time of evaluation. Active traffic, sustained replicas, or high request volume will increase Container Apps cost beyond the free grant.
 
 ## Technologies Used 🧑‍💻
 
@@ -47,7 +48,7 @@ Streamlit is an open-source Python library that makes it easy to create interact
 
 ## Hosting and Deployment 🚀
 
-- Hosting: Azure App Service.
+- Hosting: Azure Container Apps (Consumption tier, scale-to-zero by default).
 - Deployment: GitHub Actions
 
 ## Architecture Overview 🏛️

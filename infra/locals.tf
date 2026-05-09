@@ -1,17 +1,18 @@
 locals {
-  app_service_plan_name = "asp-${var.app_name}"
-  linux_web_app_name    = "app-${var.app_name}"
-  app_settings = {
+  log_analytics_workspace_name   = "log-${var.app_name}"
+  container_app_environment_name = "cae-${var.app_name}"
+  container_app_name             = "ca-${var.app_name}"
+
+  registry_host = replace(replace(var.docker_registry_url, "https://", ""), "http://", "")
+  full_image    = "${local.registry_host}/${var.docker_image_name}"
+
+  container_env = merge({
     ENV = var.environment
-  }
-  
-  # Common tags for all resources
+  }, var.app_settings)
+
   common_tags = {
     Environment = var.environment
     Application = var.app_name
     ManagedBy   = "Terraform"
   }
-  
-  # Log level based on environment
-  log_level = var.environment == "prod" ? "Warning" : "Verbose"
 }

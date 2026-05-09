@@ -5,7 +5,7 @@ variable "resource_group_name" {
 }
 
 variable "docker_image_name" {
-  description = "Docker image name and tag to deploy (format: repository/image:tag)"
+  description = "Docker image name and tag to deploy (format: repository/image:tag). Combined with docker_registry_url to form the fully-qualified image."
   type        = string
   default     = "waynegoosen/azure-streamlit-poc:0.1.1"
   validation {
@@ -25,7 +25,7 @@ variable "docker_registry_url" {
 }
 
 variable "use_docker_registry_auth" {
-  description = "Flag to indicate if Docker registry authentication is required"
+  description = "Flag to indicate if Docker registry authentication is required (set to true for private registries)"
   type        = bool
   default     = false
 }
@@ -45,24 +45,48 @@ variable "docker_registry_password" {
 }
 
 variable "app_settings" {
-  description = "Additional application settings to merge with default settings"
+  description = "Additional environment variables to inject into the container (merged with default settings)"
   type        = map(string)
   default     = {}
 }
 
-variable "always_on_enabled" {
-  description = "Enable always_on feature. Note: Cannot be true when using Free, F1, or D1 SKUs."
-  type        = bool
-  default     = true
+variable "container_cpu" {
+  description = "CPU cores allocated to the container. Allowed values are increments of 0.25 from 0.25 to 4.0."
+  type        = number
+  default     = 0.5
+  validation {
+    condition     = contains([0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0], var.container_cpu)
+    error_message = "container_cpu must be one of: 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0."
+  }
 }
 
-variable "app_service_plan_sku_name" {
-  description = "SKU name for the App Service Plan. IMPORTANT: Free, F1, and D1 SKUs do not support always_on feature. If using these SKUs, set always_on_enabled to false."
+variable "container_memory" {
+  description = "Memory allocated to the container. Must be paired with a compatible cpu value (memory:cpu ratio of 2:1 GiB:vCPU)."
   type        = string
-  default     = "B1"
+  default     = "1Gi"
   validation {
-    condition     = contains(["B1", "B2", "B3", "D1", "F1", "P1v2", "P2v2", "P3v2", "P0v3", "P1v3", "P2v3", "P3v3", "P1mv3", "P2mv3", "P3mv3", "P4mv3", "P5mv3"], var.app_service_plan_sku_name)
-    error_message = "The app_service_plan_sku_name must be one of the following: B1, B2, B3, D1, F1, P1v2, P2v2, P3v2, P0v3, P1v3, P2v3, P3v3, P1mv3, P2mv3, P3mv3, P4mv3, P5mv3."
+    condition     = can(regex("^(0\\.5|1|1\\.5|2|2\\.5|3|3\\.5|4|4\\.5|5|5\\.5|6|6\\.5|7|7\\.5|8)Gi$", var.container_memory))
+    error_message = "container_memory must be in the format 'NGi' between 0.5Gi and 8Gi in 0.5Gi increments."
+  }
+}
+
+variable "min_replicas" {
+  description = "Minimum number of replicas. Set to 0 to enable scale-to-zero (pay only when receiving traffic)."
+  type        = number
+  default     = 0
+  validation {
+    condition     = var.min_replicas >= 0 && var.min_replicas <= 25
+    error_message = "min_replicas must be between 0 and 25."
+  }
+}
+
+variable "max_replicas" {
+  description = "Maximum number of replicas. Streamlit holds session state in-memory; sticky sessions are enabled to keep users on the same replica."
+  type        = number
+  default     = 1
+  validation {
+    condition     = var.max_replicas >= 1 && var.max_replicas <= 25
+    error_message = "max_replicas must be between 1 and 25."
   }
 }
 
